@@ -1,12 +1,14 @@
 import * as React from 'react';
 import {Text, SafeAreaView} from 'react-native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import FIcon from 'react-native-vector-icons/Feather';
+
+FIcon.loadFont();
 
 const MoviesHome = () => {
   return (
     <SafeAreaView>
       <Text>Movies Home</Text>
-      <MaterialCommunityIcons name="bell" color={'red'} size={20} />
+      <FIcon name="home" color={'red'} size={20} />
     </SafeAreaView>
   );
 };
