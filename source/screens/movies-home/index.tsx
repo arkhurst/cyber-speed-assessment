@@ -8,7 +8,7 @@ import {FlatList} from 'react-native-gesture-handler';
 import {RootStackParamList} from '../../navigation/types';
 import {StackNavigationProp} from '@react-navigation/stack';
 
-const data: Movie[] = [
+export const data: Movie[] = [
   {
     '#TITLE': 'Alien: Romulus',
     '#YEAR': 2024,
