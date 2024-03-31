@@ -1,4 +1,5 @@
 import React, {FC, useState} from 'react';
+import {Colors} from '../../constants';
 import {
   TextInput as BaseTextInput,
   StyleSheet,
@@ -7,7 +8,6 @@ import {
   View,
 } from 'react-native';
 import {RFValue} from 'react-native-responsive-fontsize';
-import {Colors} from '../../constants/colors';
 
 interface Props {
   backgroundColor?: string;
@@ -22,13 +22,13 @@ const TextInput: FC<Props & TextInputProps> = props => {
           {...props}
           onFocus={() => setActive(true)}
           onBlur={() => setActive(false)}
-          placeholderTextColor={Colors.secondary['400']}
+          placeholderTextColor={Colors.primary['400']}
           style={[
             styles.container,
-            {backgroundColor: props.backgroundColor ?? Colors.white},
+            {backgroundColor: props.backgroundColor ?? Colors.primary['800']},
             active ? styles.activeBorder : styles.inactiveBorder,
           ]}
-          selectionColor={Colors.secondary['600']}
+          selectionColor={Colors.primary['400']}
         />
       </View>
     </View>
@@ -42,9 +42,9 @@ const styles = StyleSheet.create({
   },
   container: {
     borderRadius: RFValue(8),
-    height: Platform.OS === 'ios' ? RFValue(45) : RFValue(50),
+    height: Platform.OS === 'ios' ? RFValue(35) : RFValue(40),
     paddingHorizontal: RFValue(15),
-    color: Colors.primary['900'],
+    color: Colors.white,
     fontFamily: 'Poppins-Regular',
     fontSize: RFValue(13),
   },
@@ -63,16 +63,6 @@ const styles = StyleSheet.create({
         borderColor: Colors.primary['700'],
       },
     }),
-  },
-  countryPickerButton: {
-    alignItems: 'center',
-    borderWidth: 1,
-    borderRadius: RFValue(8),
-    marginRight: 8,
-    height: Platform.OS === 'ios' ? RFValue(45) : RFValue(50),
-    paddingHorizontal: RFValue(15),
-    justifyContent: 'center',
-    display: 'flex',
   },
 });
 

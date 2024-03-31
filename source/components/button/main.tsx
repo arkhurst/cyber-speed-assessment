@@ -11,8 +11,8 @@ import {
 import {Text} from '../text';
 import {ButtonProps} from './types';
 import Icon from 'react-native-vector-icons/Feather';
-import {Colors} from '../../constants';
 import {RFValue} from 'react-native-responsive-fontsize';
+import {Colors} from '../../constants';
 
 const Button: FC<ButtonProps> = ({
   accessibilityLabel,

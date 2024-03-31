@@ -9,9 +9,21 @@ const Stack = createStackNavigator<RootStackParamList>();
 const Navigator = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="moviesHome" component={MoviesHome} />
-        <Stack.Screen name="movieDetails" component={MoviesDetails} />
+      <Stack.Navigator initialRouteName="moviesHome">
+        <Stack.Screen
+          name="moviesHome"
+          component={MoviesHome}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="movieDetails"
+          component={MoviesDetails}
+          options={{
+            headerShown: false,
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
