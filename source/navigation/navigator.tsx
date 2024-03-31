@@ -10,8 +10,20 @@ const Navigator = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="moviesHome" component={MoviesHome} />
-        <Stack.Screen name="movieDetails" component={MoviesDetails} />
+        <Stack.Screen
+          name="moviesHome"
+          component={MoviesHome}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="movieDetails"
+          component={MoviesDetails}
+          options={{
+            headerShown: false,
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

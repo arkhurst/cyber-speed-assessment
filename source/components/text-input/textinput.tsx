@@ -1,4 +1,5 @@
 import React, {FC, useState} from 'react';
+import {Colors} from '../../constants';
 import {
   TextInput as BaseTextInput,
   StyleSheet,
@@ -7,7 +8,6 @@ import {
   View,
 } from 'react-native';
 import {RFValue} from 'react-native-responsive-fontsize';
-import {Colors} from '../../constants/colors';
 
 interface Props {
   backgroundColor?: string;
