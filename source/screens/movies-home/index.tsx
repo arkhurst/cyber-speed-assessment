@@ -5,6 +5,8 @@ import {Header, MovieCard} from './components';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {Movie} from './types';
 import {FlatList} from 'react-native-gesture-handler';
+import {RootStackParamList} from '../../navigation/types';
+import {StackNavigationProp} from '@react-navigation/stack';
 
 const data: Movie[] = [
   {
@@ -129,13 +131,28 @@ const data: Movie[] = [
   },
 ];
 
-const MoviesHome = () => {
+type Props = {
+  navigation: StackNavigationProp<RootStackParamList>;
+};
+
+const MoviesHome = ({navigation}: Props) => {
+  const handlePressMovie = React.useCallback(
+    (selectedMovie: Movie) => {
+      navigation.navigate('movieDetails', {movieId: selectedMovie['#IMDB_ID']});
+    },
+    [navigation],
+  );
   return (
     <SafeAreaView style={styles.container}>
       <Header />
       <FlatList
         data={data}
-        renderItem={({item}) => <MovieCard movie={item} />}
+        renderItem={({item}) => (
+          <MovieCard
+            movie={item}
+            onMoviePressed={() => handlePressMovie(item)}
+          />
+        )}
         keyExtractor={item => item['#IMDB_ID']}
         numColumns={2}
         contentContainerStyle={styles.listContainer}
@@ -149,8 +166,8 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.primary['900'],
     flex: 1,
-    paddingHorizontal: RFValue(2),
     paddingVertical: RFValue(20),
+    paddingHorizontal: RFValue(2),
   },
   listContainer: {
     justifyContent: 'space-between',

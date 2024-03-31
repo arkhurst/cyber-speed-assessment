@@ -7,11 +7,12 @@ import {RFValue} from 'react-native-responsive-fontsize';
 
 type Props = {
   movie: Movie;
+  onMoviePressed: () => void;
 };
 
-const MovieCard = ({movie}: Props) => {
+const MovieCard = ({movie, onMoviePressed}: Props) => {
   return (
-    <Pressable style={styles.container}>
+    <Pressable onPress={onMoviePressed} style={styles.container}>
       <Image
         source={{uri: movie['#IMG_POSTER']}}
         style={styles.posterImage}
@@ -26,7 +27,7 @@ const MovieCard = ({movie}: Props) => {
 
 const styles = StyleSheet.create({
   container: {
-    width: LAYOUT.window.width / 2 - 15,
+    width: LAYOUT.window.width / 2 - 14,
     marginBottom: RFValue(20),
     alignItems: 'center',
     paddingLeft: RFValue(14),

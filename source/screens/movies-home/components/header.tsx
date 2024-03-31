@@ -1,9 +1,9 @@
 import * as React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {RFValue} from 'react-native-responsive-fontsize';
-import FIcon from 'react-native-vector-icons/Feather';
 import {Text} from '../../../components/text';
 import {Colors} from '../../../constants';
+import FIcon from 'react-native-vector-icons/Feather';
 
 FIcon.loadFont();
 
