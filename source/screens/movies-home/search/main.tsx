@@ -7,7 +7,6 @@ import {
   View,
   Platform,
   FlatList,
-  Alert,
   ActivityIndicator,
 } from 'react-native';
 import {Colors} from '../../../constants';
@@ -19,8 +18,6 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../../../navigation/types';
 import {useMovieData} from '../../../providers/movie';
-import {useDebounce} from '../../../hooks';
-import {useGetMovieSearchResults} from '../../../api';
 import {EmptyState} from '../../../components/alerts';
 import FIcon from 'react-native-vector-icons/Ionicons';
 
@@ -32,33 +29,19 @@ type Props = {
 };
 
 const MovieSearch = ({show, onClose}: Props) => {
-  const {handleSelectMovie} = useMovieData();
-  const [searchQuery, setSearchQuery] = React.useState('');
-  const {isPending, data, mutate} = useGetMovieSearchResults();
+  const {
+    handleSelectMovie,
+    isSearchingForResults,
+    searchQuery,
+    setSearchQuery,
+    searchResults,
+  } = useMovieData();
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-  const debouncedValue = useDebounce<string>(searchQuery, 500);
-
-  const handleSearch = React.useCallback(() => {
-    if (debouncedValue) {
-      mutate(
-        {
-          searchQuery: debouncedValue,
-        },
-        {
-          onError(error) {
-            if (error.message) {
-              Alert.alert('Oops, something happened', error.message);
-            }
-          },
-        },
-      );
-    }
-  }, [debouncedValue, mutate]);
 
   const handleClose = React.useCallback(() => {
     setSearchQuery('');
     onClose();
-  }, [onClose]);
+  }, [onClose, setSearchQuery]);
 
   const handlePressMovie = React.useCallback(
     (selectedMovie: Movie) => {
@@ -67,13 +50,8 @@ const MovieSearch = ({show, onClose}: Props) => {
       setSearchQuery('');
       navigation.navigate('movieDetails');
     },
-    [navigation, handleSelectMovie, onClose],
+    [onClose, handleSelectMovie, setSearchQuery, navigation],
   );
-
-  React.useEffect(() => {
-    // Call handleSearch function whenever debouncedValue changes
-    handleSearch();
-  }, [debouncedValue, handleSearch]);
 
   const renderEmptyState = () => (
     <View style={styles.emptySearchContainer}>
@@ -101,14 +79,14 @@ const MovieSearch = ({show, onClose}: Props) => {
             <FIcon name="close" size={RFValue(20)} color={Colors.white} />
           </TouchableOpacity>
         </View>
-        {isPending ? (
+        {isSearchingForResults ? (
           <View style={styles.loaderContainer}>
             <ActivityIndicator color={Colors.white} animating={true} />
           </View>
         ) : (
           <View style={styles.searchResultsContainer}>
             <FlatList
-              data={data?.movies ?? []}
+              data={searchResults}
               showsVerticalScrollIndicator={false}
               renderItem={({item}) => (
                 <SearchResultsCard
