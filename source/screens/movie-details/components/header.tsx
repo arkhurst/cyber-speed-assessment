@@ -4,11 +4,14 @@ import {Colors} from '../../../constants';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {Text} from '../../../components/text';
 import {useNavigation} from '@react-navigation/native';
+import {useMovieData} from '../../../providers/movie';
 import FIcon from 'react-native-vector-icons/Ionicons';
 
 FIcon.loadFont();
 
 const MoviesDetailsHeader = () => {
+  const {movieDetails} = useMovieData();
+
   const navigation = useNavigation();
 
   const handleGoBack = React.useCallback(
@@ -22,7 +25,7 @@ const MoviesDetailsHeader = () => {
         <FIcon name="arrow-back" color={Colors.white} size={RFValue(20)} />
       </TouchableOpacity>
       <Text style={styles.titleContainer} type="regular">
-        Captain America
+        {movieDetails?.data?.['#TITLE']}
       </Text>
       {Platform.OS === 'ios' ? <View /> : null}
     </View>
