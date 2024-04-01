@@ -7,6 +7,13 @@ import {AnimatedScrollView} from '@kanelloc/react-native-animated-header-scroll-
 import {Text} from '../../components/text';
 import {useMovieData} from '../../providers/movie';
 import {ErrorState} from '../../components/alerts';
+import {
+  formatDate,
+  getRandomImageUrl,
+  normalizeRating,
+  parseDuration,
+} from '../../utils';
+import {MovieCollaboratorEntity} from './types';
 import FIcon from 'react-native-vector-icons/Ionicons';
 import EIcon from 'react-native-vector-icons/Entypo';
 import Loader from '../../components/loader/loader';
@@ -14,36 +21,18 @@ import Loader from '../../components/loader/loader';
 FIcon.loadFont();
 EIcon.loadFont();
 
-const actors: Array<{name: string; image: string}> = [
-  {
-    name: 'Chris',
-    image:
-      'https://images.unsplash.com/photo-1624561172888-ac93c696e10c?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fHByb2ZpbGUlMjBhdmF0YXJ8ZW58MHx8MHx8fDA%3D',
-  },
-  {
-    name: 'Robert.',
-    image:
-      'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8cHJvZmlsZSUyMGF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D',
-  },
-  {
-    name: 'Scarlett',
-    image:
-      'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fHByb2ZpbGUlMjBhdmF0YXJ8ZW58MHx8MHx8fDA%3D',
-  },
-  {
-    name: 'Sebastian',
-    image:
-      'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8cHJvZmlsZSUyMGF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D',
-  },
-  {
-    name: 'Anthony',
-    image:
-      'https://images.unsplash.com/photo-1654110455429-cf322b40a906?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjZ8fHByb2ZpbGUlMjBhdmF0YXJ8ZW58MHx8MHx8fDA%3D',
-  },
-];
-
 const MoviesDetails = () => {
   const {movieDetails, isMovieDetailsLoading} = useMovieData();
+
+  const topCastWithRandomImages =
+    React.useMemo((): MovieCollaboratorEntity[] => {
+      return (
+        movieDetails?.data?.actor?.map(a => ({
+          ...a,
+          imageUrl: getRandomImageUrl(),
+        })) ?? []
+      );
+    }, [movieDetails?.data?.actor]);
 
   if (isMovieDetailsLoading) {
     return <Loader />;
@@ -73,11 +62,14 @@ const MoviesDetails = () => {
               <View style={styles.ratingContainer}>
                 <FIcon
                   name="star"
-                  size={RFValue(17)}
+                  size={RFValue(16)}
                   color={Colors.yellow['500']}
                 />
                 <Text type="regular" style={styles.ratingValue}>
-                  5.0
+                  {normalizeRating(
+                    movieDetails?.data?.aggregateRating?.ratingValue,
+                    movieDetails?.data?.aggregateRating?.bestRating,
+                  )}
                 </Text>
               </View>
             </View>
@@ -86,7 +78,9 @@ const MoviesDetails = () => {
               <View style={styles.movieQualityContainer}>
                 <Text style={styles.movieQualityText}>4k</Text>
               </View>
-              <Text style={styles.basicInfoText}>2h 30m</Text>
+              <Text style={styles.basicInfoText}>
+                {parseDuration(movieDetails?.data?.duration)}
+              </Text>
               <EIcon
                 name="dot-single"
                 size={RFValue(18)}
@@ -102,7 +96,9 @@ const MoviesDetails = () => {
                 color={Colors.white}
                 style={styles.basicInfoTextSpacing}
               />
-              <Text style={styles.basicInfoText}>19 Dec 2023</Text>
+              <Text style={styles.basicInfoText}>
+                {formatDate(movieDetails?.data?.datePublished)}
+              </Text>
             </View>
             {/* story line */}
             <View style={styles.subTitleContainer}>
@@ -138,11 +134,11 @@ const MoviesDetails = () => {
               </Text>
               <View style={styles.topCastContainer}>
                 <FlatList
-                  data={actors}
+                  data={topCastWithRandomImages}
                   horizontal
                   keyExtractor={(item, index) => index.toString()}
                   renderItem={({item}) => (
-                    <TopCastCard name={item.name} image={item.image} />
+                    <TopCastCard name={item.name} imageUrl={item?.imageUrl} />
                   )}
                   showsHorizontalScrollIndicator={false}
                 />
@@ -156,6 +152,13 @@ const MoviesDetails = () => {
               <Text style={styles.descriptionText}>
                 {movieDetails?.data?.review?.reviewBody ?? 'N/A'}
               </Text>
+              <View style={styles.directorContainer}>
+                <Text style={styles.directorTitleText}>Reviewed by:</Text>
+                <Text style={styles.directorNameText}>
+                  {' '}
+                  {movieDetails?.data?.review?.author?.name ?? 'N/A'}
+                </Text>
+              </View>
             </View>
           </View>
         </AnimatedScrollView>
@@ -195,6 +198,7 @@ const styles = StyleSheet.create({
     fontSize: RFValue(12),
     color: Colors.primary['300'],
     paddingLeft: RFValue(8),
+    paddingTop: RFValue(3),
   },
   basicInfoContainer: {
     display: 'flex',

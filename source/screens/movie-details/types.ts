@@ -4,6 +4,7 @@ export type MovieCollaboratorEntity = {
   '@type': 'Person' | 'Organization';
   url: string;
   name?: string;
+  imageUrl?: string;
 };
 
 export type MovieReview = {

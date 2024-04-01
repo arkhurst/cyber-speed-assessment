@@ -3,23 +3,19 @@ import {Image, StyleSheet, View} from 'react-native';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {Colors} from '../../../constants';
 import {Text} from '../../../components/text';
+import {MovieCollaboratorEntity} from '../types';
 
-type Props = {
-  name: string;
-  image: string;
-};
-
-const TopCastCard = ({name, image}: Props) => {
+const TopCastCard = ({name, imageUrl}: Partial<MovieCollaboratorEntity>) => {
   return (
     <View style={styles.container}>
       <Image
         source={{
-          uri: image,
+          uri: imageUrl,
         }}
         style={styles.image}
         resizeMode="cover"
       />
-      <Text style={styles.castName}>{name}</Text>
+      <Text style={styles.castName}>{name?.split(' ')?.[0]}</Text>
     </View>
   );
 };
