@@ -7,7 +7,7 @@ import {API_ROUTES, QUERY_KEYS} from '../constants';
 import {fetchClient} from '../lib';
 import {Movie} from '../screens/movies-home/types';
 
-type MovieList = {
+export type MovieList = {
   ok: boolean;
   description: Movie[];
   error_code: number;
