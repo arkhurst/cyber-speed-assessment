@@ -5,8 +5,11 @@ import {Colors} from '../../constants';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {AnimatedScrollView} from '@kanelloc/react-native-animated-header-scroll-view';
 import {Text} from '../../components/text';
+import {useMovieData} from '../../providers/movie';
+import {ErrorState} from '../../components/alerts';
 import FIcon from 'react-native-vector-icons/Ionicons';
 import EIcon from 'react-native-vector-icons/Entypo';
+import Loader from '../../components/loader/loader';
 
 FIcon.loadFont();
 EIcon.loadFont();
@@ -40,112 +43,125 @@ const actors: Array<{name: string; image: string}> = [
 ];
 
 const MoviesDetails = () => {
+  const {movieDetails, isMovieDetailsLoading} = useMovieData();
+
+  if (isMovieDetailsLoading) {
+    return <Loader />;
+  }
+
   return (
     <View style={styles.container}>
-      <AnimatedScrollView
-        showsVerticalScrollIndicator={false}
-        TopNavBarComponent={<MoviesDetailsHeader />}
-        HeaderNavbarComponent={<HeaderBackButton />}
-        topBarHeight={Platform.OS === 'android' ? RFValue(45) : RFValue(70)}
-        headerMaxHeight={RFValue(300)}
-        headerImage={{
-          uri: 'https://m.media-amazon.com/images/M/MV5BZDlkZmRlYTctNGJmNy00MjVkLThjZDQtMWY5Zjg2NjlhZDZkXkEyXkFqcGdeQXVyMDM2NDM2MQ@@._V1_.jpg',
-        }}>
-        {/* body */}
-        <View style={styles.bodyContainer}>
-          {/* movie title container */}
-          <View style={styles.movieTitleContainer}>
-            <Text style={styles.movieTitle} type="medium">
-              Captain America
-            </Text>
-            {/* rating container */}
-            <View style={styles.ratingContainer}>
-              <FIcon
-                name="star"
-                size={RFValue(17)}
-                color={Colors.yellow['500']}
+      {movieDetails?.statusCode === 200 ? (
+        <AnimatedScrollView
+          showsVerticalScrollIndicator={false}
+          TopNavBarComponent={<MoviesDetailsHeader />}
+          HeaderNavbarComponent={<HeaderBackButton />}
+          topBarHeight={Platform.OS === 'android' ? RFValue(45) : RFValue(70)}
+          headerMaxHeight={RFValue(300)}
+          headerImage={{
+            uri:
+              movieDetails?.data?.image ?? movieDetails?.data?.['#IMG_POSTER'],
+          }}>
+          {/* body */}
+          <View style={styles.bodyContainer}>
+            {/* movie title container */}
+            <View style={styles.movieTitleContainer}>
+              <Text style={styles.movieTitle} type="medium">
+                {movieDetails?.data['#TITLE']}
+              </Text>
+              {/* rating container */}
+              <View style={styles.ratingContainer}>
+                <FIcon
+                  name="star"
+                  size={RFValue(17)}
+                  color={Colors.yellow['500']}
+                />
+                <Text type="regular" style={styles.ratingValue}>
+                  5.0
+                </Text>
+              </View>
+            </View>
+            {/* basic info */}
+            <View style={styles.basicInfoContainer}>
+              <View style={styles.movieQualityContainer}>
+                <Text style={styles.movieQualityText}>4k</Text>
+              </View>
+              <Text style={styles.basicInfoText}>2h 30m</Text>
+              <EIcon
+                name="dot-single"
+                size={RFValue(18)}
+                color={Colors.white}
+                style={styles.basicInfoTextSpacing}
               />
-              <Text type="regular" style={styles.ratingValue}>
-                5.0
+              <Text style={styles.basicInfoText}>
+                {movieDetails?.data?.genre?.[0]}
+              </Text>
+              <EIcon
+                name="dot-single"
+                size={RFValue(18)}
+                color={Colors.white}
+                style={styles.basicInfoTextSpacing}
+              />
+              <Text style={styles.basicInfoText}>19 Dec 2023</Text>
+            </View>
+            {/* story line */}
+            <View style={styles.subTitleContainer}>
+              <Text type="medium" style={styles.subTitleText}>
+                Story Line
+              </Text>
+              <Text style={styles.descriptionText}>
+                {movieDetails?.data?.description}
+              </Text>
+              <View style={styles.directorContainer}>
+                <Text style={styles.directorTitleText}>Director:</Text>
+                <Text style={styles.directorNameText}>
+                  {' '}
+                  {movieDetails?.data?.director?.find(
+                    d => d['@type'] === 'Person',
+                  )?.name ?? 'N/A'}
+                </Text>
+              </View>
+              <View style={styles.directorContainer}>
+                <Text style={styles.directorTitleText}>Creator:</Text>
+                <Text style={styles.directorNameText}>
+                  {' '}
+                  {movieDetails?.data?.creator?.find(
+                    c => c?.['@type'] === 'Person',
+                  )?.name ?? 'N/A'}{' '}
+                </Text>
+              </View>
+            </View>
+            {/* actors */}
+            <View style={styles.subTitleContainer}>
+              <Text type="medium" style={styles.subTitleText}>
+                Top Cast
+              </Text>
+              <View style={styles.topCastContainer}>
+                <FlatList
+                  data={actors}
+                  horizontal
+                  keyExtractor={(item, index) => index.toString()}
+                  renderItem={({item}) => (
+                    <TopCastCard name={item.name} image={item.image} />
+                  )}
+                  showsHorizontalScrollIndicator={false}
+                />
+              </View>
+            </View>
+            {/* full movie summary */}
+            <View style={styles.subTitleContainer}>
+              <Text type="medium" style={styles.subTitleText}>
+                Review Summary
+              </Text>
+              <Text style={styles.descriptionText}>
+                {movieDetails?.data?.review?.reviewBody ?? 'N/A'}
               </Text>
             </View>
           </View>
-          {/* basic info */}
-          <View style={styles.basicInfoContainer}>
-            <View style={styles.movieQualityContainer}>
-              <Text style={styles.movieQualityText}>4k</Text>
-            </View>
-            <Text style={styles.basicInfoText}>2h 30m</Text>
-            <EIcon
-              name="dot-single"
-              size={RFValue(18)}
-              color={Colors.white}
-              style={styles.basicInfoTextSpacing}
-            />
-            <Text style={styles.basicInfoText}>Action</Text>
-            <EIcon
-              name="dot-single"
-              size={RFValue(18)}
-              color={Colors.white}
-              style={styles.basicInfoTextSpacing}
-            />
-            <Text style={styles.basicInfoText}>19 Dec 2023</Text>
-          </View>
-          {/* story line */}
-          <View style={styles.subTitleContainer}>
-            <Text type="medium" style={styles.subTitleText}>
-              Story Line
-            </Text>
-            <Text style={styles.descriptionText}>
-              Krishna (Mani), Soundar (Sridhar) and Basky (Thadi Balaji) live in
-              a lodge together in Chennai. Krishna aspires to become a film
-              director while Sridhar wants to become a music director. Raju
-              (Raju) who works as a courier boy does ...
-            </Text>
-            <View style={styles.directorContainer}>
-              <Text style={styles.directorTitleText}>Director:</Text>
-              <Text style={styles.directorNameText}> John Doe</Text>
-            </View>
-            <View style={styles.directorContainer}>
-              <Text style={styles.directorTitleText}>Creator:</Text>
-              <Text style={styles.directorNameText}> Nyla Harper </Text>
-            </View>
-          </View>
-          {/* actors */}
-          <View style={styles.subTitleContainer}>
-            <Text type="medium" style={styles.subTitleText}>
-              Top Cast
-            </Text>
-            <View style={styles.topCastContainer}>
-              <FlatList
-                data={actors}
-                horizontal
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={({item}) => (
-                  <TopCastCard name={item.name} image={item.image} />
-                )}
-                showsHorizontalScrollIndicator={false}
-              />
-            </View>
-          </View>
-          {/* full movie summary */}
-          <View style={styles.subTitleContainer}>
-            <Text type="medium" style={styles.subTitleText}>
-              Movie Summary
-            </Text>
-            <Text style={styles.descriptionText}>
-              Krishna (Mani), Soundar (Sridhar) and Basky (Thadi Balaji) live in
-              a lodge together in Chennai. Krishna aspires to become a film
-              director while Sridhar wants to become a music director. Raju
-              (Raju) who works as a courier boy does. Lorem ipsum dolor sit
-              amet, consectetur adipisicing elit. Exercitationem laudantium
-              alias cumque ipsum, consequatur qui consectetur minus officia,
-              nihil sunt eveniet repudiandae voluptas, laboriosam tenetur totam
-              minima nulla! Officia, quia.
-            </Text>
-          </View>
-        </View>
-      </AnimatedScrollView>
+        </AnimatedScrollView>
+      ) : (
+        <ErrorState />
+      )}
     </View>
   );
 };
