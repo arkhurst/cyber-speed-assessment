@@ -23,6 +23,7 @@ export interface MovieDetailsAPiResponse {
   review: MovieReview;
   aggregateRating: MovieRating;
   contentRating: 'R';
+  keywords: string;
 }
 
 type MovieDetailsList = {
