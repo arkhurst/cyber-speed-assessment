@@ -108,6 +108,12 @@ const MoviesDetails = () => {
               <Text style={styles.descriptionText}>
                 {movieDetails?.data?.description}
               </Text>
+              <View style={styles.keywordsContainer}>
+                <Text style={styles.directorTitleText}>Keywords:</Text>
+                <Text style={styles.directorNameText}>
+                  {movieDetails?.data?.keywords ?? 'N/A'}
+                </Text>
+              </View>
               <View style={styles.directorContainer}>
                 <Text style={styles.directorTitleText}>Director:</Text>
                 <Text style={styles.directorNameText}>
@@ -245,15 +251,20 @@ const styles = StyleSheet.create({
   directorContainer: {
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center',
   },
   directorTitleText: {
     fontSize: RFValue(12),
     color: Colors.primary['300'],
   },
   directorNameText: {
-    fontSize: RFValue(12),
+    fontSize: RFValue(11),
     color: Colors.white,
+  },
+  keywordsContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignContent: 'flex-start',
+    paddingBottom: RFValue(10),
   },
 });
 

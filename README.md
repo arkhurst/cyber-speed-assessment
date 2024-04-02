@@ -4,20 +4,11 @@ This is a new [**React Native**](https://reactnative.dev) project, bootstrapped 
 
 ## iOS
 
-<div style="display: flex; flex-wrap: wrap;">
-  <img src='source/assets/screenshots/ios-home.png' style="max-width: 300px; margin-right: 10px;" />
-  <img src='source/assets/screenshots/ios-search-no-results.png' style="max-width: 300px; margin-right: 10px;" />
-  <img src='source/assets/screenshots/ios-search-results.png' style="max-width: 300px; margin-right: 10px;" />
-  <img src='source/assets/screenshots/ios-details-1.png' style="max-width: 300px; margin-right: 10px;" />
-  <img src='source/assets/screenshots/ios-details-2.png' style="max-width: 300px; margin-right: 10px;" />
-</div>
+  <img src='source/assets/screenshots/ios-home.png'  />
 
 ## Android
 
-<div style="display: flex; flex-wrap: wrap;">
-  <img src='source/assets/screenshots/android-details-1.png' style="max-width: 300px; margin-right: 10px;" />
-  <img src='source/assets/screenshots/android-details-2.png' style="max-width: 300px; margin-right: 10px;" />
-</div>
+  <img src='source/assets/screenshots/android-details-1.png'  />
 
 # Getting Started
 

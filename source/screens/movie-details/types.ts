@@ -53,4 +53,5 @@ export interface MovieDetails extends Movie {
   review: MovieReview;
   aggregateRating: MovieRating;
   contentRating: 'R';
+  keywords: string;
 }
